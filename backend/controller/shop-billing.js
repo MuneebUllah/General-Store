@@ -10,12 +10,15 @@ const createShopBill = async (req, res) => {
 
         // Calculate totalAmount for each item and also calculate grandTotal
         let grandTotal = 0;
-        const updatedItems = items.map(item => {
+        let count = 0;
+        const updatedItems = items.map((item , index) => {
             const totalAmount = item.quantity * item.price;
             grandTotal += totalAmount; // Adding to grandTotal
+            count += index + 1;
             return {
                 ...item,
-                totalAmount
+                totalAmount,
+                count
             };
         });
 
@@ -30,7 +33,7 @@ const createShopBill = async (req, res) => {
             items: updatedItems
         });
 
-        return res.json({ message: 'Bill Created Successfully', shopBill, grandTotal, discount, adjustedTotal });
+        return res.json({ message: 'Bill Created Successfully', shopBill, grandTotal,count, discount, adjustedTotal });
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: 'Internal Server Error' });
@@ -45,7 +48,7 @@ const getShopBill = async (req, res) => {
         }
 
         // Iterate through each bill to calculate grandTotal and finalTotal
-        const result = bills.map(bill => {
+        const result = bills.map((bill , index) => {
             // Calculate grandTotal for the current bill
             const grandTotal = bill.items.reduce((total, item) => total + item.totalAmount, 0);
 
@@ -55,12 +58,16 @@ const getShopBill = async (req, res) => {
             // Apply the discount
             const adjustedTotal = grandTotal - discount;
 
+            const count = bill.items.length; 
             // Ensure the final total isn't negative
             const finalTotal = adjustedTotal < 0 ? 0 : adjustedTotal;
 
             return {
-                bill,
+                billItems: bill.items, // The items in the bill, now outside the `bill` object
+                createdAt: bill.createdAt,
+                id:bill._id,
                 grandTotal,
+                count,
                 discount,
                 finalTotal
             };
@@ -74,9 +81,11 @@ const getShopBill = async (req, res) => {
 
 
 const getShopBillById = async (req, res) => {
-    const { Id } = req.params;
+    const { id } = req.params;
+    console.log(id);
+    
     try {
-        const bill = await ShopBilling.findOne({ _id: Id });
+        const bill = await ShopBilling.findOne({ _id: id });
         if (!bill) {
             return res.json({ message: 'No Bill Found' });
         }
@@ -91,8 +100,15 @@ const getShopBillById = async (req, res) => {
         // Ensure the final total isn't negative
         const finalTotal = adjustedTotal < 0 ? 0 : adjustedTotal;
 
-        return res.json({ bill, grandTotal, discount, finalTotal });
+        return res.json({ 
+            items:bill?.items,
+            createdAt:bill?.createdAt,
+            id:bill?._id,
+            grandTotal,
+            discount, 
+            finalTotal });
     } catch (error) {
+        console.log(error)       
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 };

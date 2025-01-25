@@ -64,7 +64,7 @@ const Navbar = () => {
   }, [image]);
 
   return (
-    <div className="h-20 bg-white w-full flex flex-row justify-between items-center">
+    <div className="h-20 no-print bg-white w-full flex flex-row justify-between items-center">
       <div className="flex gap-4">
       <div className="px-5">
         <HiMiniBars3

@@ -36,3 +36,83 @@
     transform: rotate(360deg);
   }
 }
+
+
+/* @media print { */
+  /* Hide elements during print */
+  /* .print      Replace with your actual sidebar class */
+ /* Add this to hide the print button */
+  /* {
+      display: none;
+  }
+} */
+
+@media print {
+  /* General styles for printing */
+  body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+  }
+
+  /* Make the printable content container the focus */
+  .print-container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+  }
+
+  /* Hide unnecessary elements for printing, like navigation or buttons */
+  .no-print {
+      display: none;
+  }
+
+  /* Ensure content such as tables and text align well */
+  .print-container h1 {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 20px;
+  }
+
+  .print-container .content {
+      margin-top: 20px;
+  }
+
+  .print-container .content table {
+      width: 100%;
+      border-collapse: collapse;
+  }
+
+  .print-container .content table th, td {
+      padding: 8px;
+      border: 1px solid #ddd;
+      text-align: left;
+  }
+
+  .print-container .content table th {
+      background-color: #f2f2f2;
+  }
+
+  /* Make sure the page is well-formatted for printing */
+  .print-container .content {
+      font-size: 14px;
+  }
+
+  /* Print header and footer adjustments (if needed) */
+  .print-footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+  }
+
+  /* Remove page numbers or other unnecessary content */
+  .print-container .no-print {
+      display: none;
+  }
+
+  /* Customize page breaks */
+  .page-break {
+      page-break-before: always;
+  }
+}

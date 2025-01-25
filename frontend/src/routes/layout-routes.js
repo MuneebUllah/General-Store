@@ -12,6 +12,7 @@ import CreditDetail from '../container/credit-account/detail/index'
 import Credit from "../container/credit-account";
 import Dashboard from "../container/dashbard";
 import Shop from "../container/shop";
+import BillDetail from "../container/shop/detail/index";
 
 const LayoutRoutes = () => {
   const routes = [
@@ -27,6 +28,7 @@ const LayoutRoutes = () => {
     {path:'/credit' , element: <Credit />},
     {path:'/credit/detail' , element: <CreditDetail />},
     {path:'/shop' , element: <Shop />},
+    {path:'/shop/detail/:id' , element: <BillDetail />},
   
 
   ]

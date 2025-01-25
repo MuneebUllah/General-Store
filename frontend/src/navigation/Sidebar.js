@@ -6,7 +6,7 @@ export default function Sidebar({ children }) {
 
   return (
     <aside
-      className={`h-screen ${isSidebarExpanded ? " w-64" : "w-20"}`}
+      className={`no-print h-screen ${isSidebarExpanded ? " w-64" : "w-20"}`}
       style={{
         backgroundImage: `url(/img/sidebarbg.png)`,
         objectFit: "contain",

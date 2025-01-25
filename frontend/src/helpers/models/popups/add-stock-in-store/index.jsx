@@ -106,7 +106,7 @@ const AddStockInStorePopup = () => {
             <button className='relative float-right text-right w-12' onClick={closeModal}>
                 <img src={close} alt="img" />
             </button>
-            <div className='flex flex-col items-center justify-center w-full gap-4 pt-8'>
+            <form onSubmit={handleSubmit} className='flex flex-col items-center justify-center w-full gap-4 pt-8'>
             <div>
                 <h2 className='text-2xl font-semibold font-inter'>Add a New Stock</h2>
             </div>
@@ -170,7 +170,6 @@ const AddStockInStorePopup = () => {
                             id="Size"
                             value={data.size}
                             onChange={handleSizeChange}
-                            required
                             className="border p-4 w-full h-14 bg-gray-100 rounded-lg outline-none text-base text-gray-600"
                         >
                             <option value="">Size</option>
@@ -192,9 +191,9 @@ const AddStockInStorePopup = () => {
                 </div>
             </div>
             <div className='mt-6'>
-                <button className="w-96 bg-[#1B473B] text-white text-lg p-3 rounded-lg" onClick={handleSubmit}>Add</button>
+                <button className="w-96 bg-[#1B473B] text-white text-lg p-3 rounded-lg">Add</button>
             </div>
-        </div>
+        </form>
         </Modal>
     );
 };
