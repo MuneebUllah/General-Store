@@ -1,6 +1,12 @@
 import { AiOutlineWechat } from "react-icons/ai";
 import { FaUsers } from "react-icons/fa";
 import { HiMiniSquares2X2 } from "react-icons/hi2";
+import { RxDashboard } from "react-icons/rx";
+import { MdOutlineLocalGroceryStore } from "react-icons/md";
+import { FaHistory } from "react-icons/fa";
+import { FaRegMoneyBillAlt } from "react-icons/fa";
+import { CiCreditCard1 } from "react-icons/ci";
+import { IoTodayOutline } from "react-icons/io5";
 
 export const colors = {
   primary: "#2E4D55",
@@ -19,19 +25,29 @@ export const dashboard = {
 }
 export const sidebarData = [
   {
-    text: "Today Calculation",
-    path: "/today-calc",
-    icon: <HiMiniSquares2X2 size={20} />,
+    text: "Dashboard",
+    path: "/",
+    icon: <RxDashboard  size={20}/>,
   },
   {
-    text: "Total Available Stock",
+    text: "Today Calculation",
+    path: "/today-calc",
+    icon: <IoTodayOutline size={20} />,
+  },
+  {
+    text: "Shop",
+    path: "/shop",
+    icon: <AiOutlineWechat size={20} />,
+  },
+  {
+    text: "Store",
     path: "/data",
-    icon: <HiMiniSquares2X2 size={20} />,
+    icon: <MdOutlineLocalGroceryStore size={20} />,
   },
   { text: "Expenses", path: "/expense", icon: <FaUsers size={20} /> },
 
-  { text: "Track Record", path: "/history", icon: <AiOutlineWechat size={20} /> },
-  { text: "Billing", path: "/bill", icon: <AiOutlineWechat size={20} /> },
-  { text: "Credit Account", path: "/credit", icon: <FaUsers size={20} /> },
+  { text: "Track Record", path: "/history", icon: <FaHistory size={20} /> },
+  { text: "Companies Bill", path: "/bill", icon: <FaRegMoneyBillAlt  size={20}/> },
+  { text: "Credit Account", path: "/credit", icon: <CiCreditCard1 size={20} /> },
 
 ];

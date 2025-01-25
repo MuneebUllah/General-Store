@@ -43,6 +43,11 @@ export const Apis = {
     getPaidAmountDetail : (id) => Request.get(`/credit/pay-amount/${id}`),
     
     // Get Total Saving
-    getTotalSaving : () => Request.get('/total-saving')
+    getTotalSaving : () => Request.get('/total-saving'),
+
+    // Shop Billing
+    createShopBill:(body) => Request.post('/shop-billing' , body),
+    getShopBill:() => Request.get('/shop-billing'),
+    getShopBillById:(Id) => Request.get(`/shop-billing/${Id}`)
 
 }

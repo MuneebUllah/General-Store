@@ -37,7 +37,7 @@ const CreditDetail = () => {
 
             <div className="flex items-center flex-col justify-center">
                 {/* Display Total Amount */}
-                <div className="flex items-center w-4/6 flex-col mb-2">
+                <div className="flex items-center w-5/6 flex-col mb-2">
                     <div className="flex w-full justify-between gap-8">
                         <h1 className="text-2xl font-semibold">Total Amount</h1>
                         <div className="text-2xl">{data?.totalAmount}</div>
@@ -46,9 +46,10 @@ const CreditDetail = () => {
 
                 {data?.details?.length > 0 ?
                     data?.details?.map((item, index) => (
-                        <div className="flex items-center w-4/6 flex-col mb-2" key={index}>
+                        <div className="flex items-center w-5/6 flex-col mb-2" key={index}>
                             {/* Display Paid Amount with Date */}
                             <div className="flex w-full justify-between gap-8">
+                                <h1 className="text-2xl font-semibold w-64">{item?.description}</h1>
                                 <h1 className="text-2xl font-semibold">{moment(item?.createdAt).format('DD/MM/YYYY')}</h1>
                                 <div className="text-2xl border-b-2 w-24 text-end border-solid border-[#1f1e1e]">
                                     -{item?.paidAmount}

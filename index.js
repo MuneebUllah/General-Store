@@ -10,6 +10,7 @@ const billRoutes = require('./backend/routes/bill');
 const route = require('./backend/routes/expenses');
 const userRoutes = require('./backend/routes/user');
 const creditRoutes = require('./backend/routes/credit');
+const ShopBillingRoutes = require('./backend/routes/shop-billing');
 
 app.use(cors());
 
@@ -43,4 +44,5 @@ cron.schedule('0 0 * * *', async () => {
     app.use('/api' , route)
     app.use('/' , userRoutes)
     app.use('/api' , creditRoutes)
+    app.use('/api' , ShopBillingRoutes)
 app.listen(PORT, () => console.log('MongoDB Connected'))

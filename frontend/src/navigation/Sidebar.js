@@ -14,7 +14,7 @@ export default function Sidebar({ children }) {
         backgroundPosition: "center",
       }}
     >
-      <nav className="h-full flex pt-8 flex-col bg-transparent border-r shadow-sm">
+      <nav className="h-full flex gap-4 pt-8 flex-col bg-transparent border-r shadow-sm">
       <div className="p-4 pb-2 flex justify-between items-center">
           <img
             src={logo}
