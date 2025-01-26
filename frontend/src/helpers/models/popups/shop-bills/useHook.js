@@ -1,13 +1,26 @@
+import Swal from "sweetalert2";
 import { Apis } from "../../../../lib/apis"
+import { dispatch } from "../../../../redux/store/store";
+import { setNewBillModalIsOpen } from "../../../../redux/slices/userSlice";
 
 const useShopBilling = () => {
     const createShopBill = async (body) => {
-        await Apis.createBill(body)
-        .then((res)=> console.log(res))
-        .catch((err) => console.log(err))
+        await Apis.createShopBill(body)
+            .then((res) =>{
+                 console.log(res)
+                 dispatch(setNewBillModalIsOpen(false));
+
+        })
+            .catch((err) => {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: err?.response?.data?.error,
+                });
+            })
     }
 
     return { createShopBill }
 }
 
-export default  useShopBilling;
+export default useShopBilling;

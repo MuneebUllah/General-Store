@@ -2,12 +2,10 @@ import Swal from "sweetalert2";
 import { Apis } from "../../lib/apis";
 
 const useShopBilling = () => {
-    // const createShopBill = async () => {
 
-    // }
-
-    const getShopBill = async (setData) => {
-        await Apis.getShopBill()
+    const getShopBill = async (setData , date) => {
+        console.log(date);        
+        await Apis.getShopBill(date ? date : new Date())
             .then((res) => setData(res?.data))
             .catch((err) => {
                 Swal.fire({

@@ -1,4 +1,5 @@
-const {billModal , savingModal , cashModal} = require('../model/bill')
+const {billModal , savingModal , cashModal} = require('../model/bill');
+const billRoutes = require('../routes/bill');
 
 const billPost = async (req, res) => {
     const { name, totalAmount, paidAmount } = req.body;
@@ -137,13 +138,49 @@ const updateBillAmount = async (req, res) => {
             return res.json({ message: 'Bill added successfully', bill });
         } else if (type === 'saving') {
             // Handle Saving
-            const saving = await savingModal.create({ name, amount });
-            await addAmountToCash(name , amount , type); // Add saving amount to cash
-            return res.json({ message: 'Saving added successfully', saving });
-        } else if(type === 'others') {
+            let savingRecord = await savingModal.findOne().sort({ date: -1 });
+
+        if (!savingRecord) {
+            // If no saving record exists, create a new one
+            savingRecord = new savingModal({ amount: parseFloat(amount) });
+        } else {
+            // Update the existing saving record
+            savingRecord.amount += parseFloat(amount);
+        }
+
+        await savingRecord.save(); // Save the updated or new record
+
+        // Add saving amount to cash
+        await addAmountToCash(name, amount, type);
+
+        return res.json({ message: 'Saving added successfully', saving: savingRecord.amount });
+    } else if(type === 'others') {
             // If the type is not "bill" or "saving", adjust to cash directly
             await addAmountToCash(name , amount , type); // Automatically add to cash
             return res.json({ message: 'Amount added to cash successfully.' });
+        }
+        else if(type === 'bill from saving'){
+            const bill = await billModal.findOne({ name });
+
+        if (!bill) {
+            return res.status(404).json({ error: 'No specific bill found' });
+        }
+
+        // Retrieve the latest saving record
+        let savingRecord = await savingModal.findOne().sort({ date: -1 });
+
+        if (!savingRecord || savingRecord.amount < parseFloat(amount)) {
+            return res.status(400).json({ error: 'Insufficient savings to pay the bill' });
+        }
+
+        // Deduct the amount from savings and update the bill's paid amount
+        savingRecord.amount -= parseFloat(amount);
+        bill.paidAmount += parseFloat(amount);
+
+        await savingRecord.save(); // Save the updated saving record
+        await bill.save(); // Save the updated bill
+
+        return res.json({ message: 'Bill paid successfully from savings', bill });
         }
         else{
             return res.status(400).json({error:'Please Enter The Correct Data'})
@@ -319,6 +356,23 @@ const searchTodayCalcByName = async (req, res) => {
     }    
 };
 
+const getSavingAmount = async (req, res) => {
+    try {
+        // Find the latest saving record (or fetch all records if needed)
+        const saving = await savingModal.findOne().sort({ date: -1 }); // Get the most recent record
+
+        if (!saving) {
+            return res.json({ message: 'No Saving Found' });
+        }
+
+        return res.json({ amount: saving.amount });
+    } catch (error) {
+        console.error('Error fetching saving amount:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
 
 
 
@@ -330,5 +384,6 @@ module.exports = {
     getTodayUpdatedBills,
     getTotalSale,
     searchBillByName,
-    searchTodayCalcByName
+    searchTodayCalcByName,
+    getSavingAmount
 } 

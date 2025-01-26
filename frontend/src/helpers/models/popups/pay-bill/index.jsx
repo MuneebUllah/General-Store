@@ -100,6 +100,14 @@ const PayBillPopup = () => {
                             />
                             <p className='text-lg'>Others</p>
                         </div>
+                        <div className='flex items-center gap-2'>
+                            <input 
+                                type="checkbox" 
+                                checked={data.type === 'bill from saving'}
+                                onChange={(e) => handleChange('type', e.target.checked ? 'bill from saving' : '')}
+                            />
+                            <p className='text-lg'>Bill From Saving</p>
+                        </div>
                     </div>
                 </div>
                 <div className='w-2/5'>

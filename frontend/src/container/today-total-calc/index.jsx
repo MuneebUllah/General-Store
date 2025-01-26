@@ -15,9 +15,9 @@ const TodayTotalCalc = () => {
       name:'',
       date:''
     })
-    const { getUpdatedBills , searchTodayCalc } = useTodayTotalCalc()
+    const { getUpdatedBills , searchTodayCalc , totalSaving} = useTodayTotalCalc()
     const { payBillModalIsOpen } = useSelector((state) => state.user);
-    useEffect(() =>{ getUpdatedBills(setData) } , [ payBillModalIsOpen ])
+    useEffect(() =>{ getUpdatedBills(setData) , totalSaving()} , [ payBillModalIsOpen ])
 
     const search = (type) => {
       if(type){

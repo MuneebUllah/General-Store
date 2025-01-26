@@ -5,7 +5,8 @@ const {
     updateBillAmount,
     getTotalSale,
     searchTodayCalcByName,
-    searchBillByName
+    searchBillByName,
+    getSavingAmount
 } = require('../controller/bill');
 const authenticateToken = require('../middlewares/auth');
 const billRoutes = express.Router()
@@ -20,5 +21,6 @@ billRoutes.route('/today-calc' , authenticateToken)
     .get(getTotalSale)
 
 billRoutes.get('/today-calc/search', authenticateToken , searchTodayCalcByName)
+billRoutes.get('/saving' , getSavingAmount);
 
 module.exports = billRoutes;

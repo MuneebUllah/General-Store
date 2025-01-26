@@ -37,9 +37,13 @@ const formSchema = new mongoose.Schema({
     type: Date,
     default: Date.now, // Automatically store the creation date
   },
-});
+  discount:{
+    type:Number,
+    default : 0
+  }
+} , { timestamps:true});
 
 // Create the model
-const ShopBilling = mongoose.model('Form', formSchema);
+const ShopBilling = mongoose.model('Shop Billing', formSchema);
 
 module.exports = ShopBilling;
