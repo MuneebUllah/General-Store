@@ -3,14 +3,14 @@ import Modal from 'react-modal';
 import close from '../../../../assets/images/close.svg';
 import deleteIcon from '../../../../assets/images/delete.svg';
 import { useSelector } from 'react-redux';
-import { setNewBillModalIsOpen } from '../../../../redux/slices/userSlice';
+import { setNewStockInShopModalIsOpen } from '../../../../redux/slices/userSlice';
 import { dispatch } from '../../../../redux/store/store';
 import useShopBilling from './useHook';
 
-const ShopBillsPopup = ({ id, data }) => {
+const NewStockInShopPopup = ({ id, data }) => {
     const [formData, setFormData] = useState({ items: [{ name: '', quantity: 0, price: 0 }] , discount:0 });
     const [errors, setErrors] = useState({});
-    const { newBillModalIsOpen } = useSelector((state) => state.user);
+    const { newStockInShopModalIsOpen } = useSelector((state) => state.user);
     const { createShopBill } = useShopBilling()
 
     const customStyles = {
@@ -91,12 +91,12 @@ const ShopBillsPopup = ({ id, data }) => {
     };
 
     const closeModal = () => {
-        dispatch(setNewBillModalIsOpen(false));
+        dispatch(setNewStockInShopModalIsOpen(false));
     };
 
     return (
         <Modal
-            isOpen={newBillModalIsOpen}
+            isOpen={newStockInShopModalIsOpen}
             onRequestClose={closeModal}
             style={customStyles}
             contentLabel="Shop Bills Modal"
@@ -176,4 +176,4 @@ const ShopBillsPopup = ({ id, data }) => {
     );
 };
 
-export default ShopBillsPopup;
+export default NewStockInShopPopup;

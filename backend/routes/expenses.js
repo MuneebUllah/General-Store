@@ -1,12 +1,12 @@
 const express = require('express');
 const { getExpenses, postExpenses, searchExpenseByDate } = require('../controller/expenses');
-const route = express.Router();
+const expenseRoute = express.Router();
 
-route.route('/expense')
+expenseRoute.route('/expense')
 .post(postExpenses)
 .get(getExpenses)
 
-route.route('/expense/search')
+expenseRoute.route('/expense/search')
 .get(searchExpenseByDate)
 
-module.exports = route;
+module.exports = expenseRoute;

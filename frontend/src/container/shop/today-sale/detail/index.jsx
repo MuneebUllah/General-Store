@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import useBillDetail from "./useHook";
 import { useParams } from "react-router-dom";
-import NoDataFound from "../../../components/no-data-found";
+import NoDataFound from "../../../../components/no-data-found";
 
 const BillDetail = () => {
     const [data, setData] = useState(null); // Initialize as null to handle loading state

@@ -11,24 +11,31 @@ import Expenses from "../container/expenses";
 import CreditDetail from '../container/credit-account/detail/index'
 import Credit from "../container/credit-account";
 import Dashboard from "../container/dashbard";
-import Shop from "../container/shop";
-import BillDetail from "../container/shop/detail/index";
+import Shop from "../container/shop/today-sale";
+import BillDetail from "../container/shop/today-sale/detail/index";
+import CategoriesInShop from "../container/shop/total-stock/categories";
+import NameDataInShop from "../container/shop/total-stock/categories/name";
+import TotalStockInShop from "../container/shop/total-stock";
 
 const LayoutRoutes = () => {
   const routes = [
     { path: "*", element: <Navigate to="/" /> },
     {path:'/' , element: <Dashboard /> },
-    {path:'/data' , element: <AvailableStock /> },
-    {path:'/data/category' , element : <CategoryData /> },
-    {path:'/data/name' , element : <NameData /> },
-    {path:'/history' , element : <TrackRecord /> },
+    {path:'/store/total-stock' , element: <AvailableStock /> },
+    {path:'/store/category' , element : <CategoryData /> },
+    {path:'/store/name' , element : <NameData /> },
+    {path:'/store/history' , element : <TrackRecord /> },
     {path:'/bill' , element: <Bill />},
     {path:'/today-calc' , element: <TodayTotalCalc />},
     {path:'/expense' , element: <Expenses />},
     {path:'/credit' , element: <Credit />},
     {path:'/credit/detail' , element: <CreditDetail />},
-    {path:'/shop' , element: <Shop />},
-    {path:'/shop/detail/:id' , element: <BillDetail />},
+    {path:'/shop/today-sale' , element: <Shop />},
+    {path:'/shop/today-sale/detail/:id' , element: <BillDetail />},
+    {path:'/shop/total-stock' , element: <TotalStockInShop /> },
+    {path:'/shop/category' , element : <CategoriesInShop /> },
+    {path:'/shop/name' , element : <NameDataInShop /> }
+    
   
 
   ]

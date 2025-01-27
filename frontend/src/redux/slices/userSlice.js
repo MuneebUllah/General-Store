@@ -15,7 +15,9 @@ const initialState = {
   addStockInStoreModalIsOpen:false, 
   addCreditModalIsOpen:false,
   payCreditAmountModalIsOpen:false,
-  newBillModalIsOpen:false
+  newBillModalIsOpen:false,
+  newStockInShopModalIsOpen:false,
+  addStockInShopModalIsOpen:false
 
 };
 
@@ -60,6 +62,9 @@ const userSlice = createSlice({
     setAddStorkInStore(state , action){
       state.addStockInStoreModalIsOpen = action.payload;
     },
+    setAddStorkInShop(state , action){
+      state.addStockInShopModalIsOpen = action.payload;
+    },
     setAddCreditModalIsOpen(state , action){
       state.addCreditModalIsOpen = action.payload;
     },
@@ -68,6 +73,9 @@ const userSlice = createSlice({
     },
     setNewBillModalIsOpen(state , action){
       state.newBillModalIsOpen = action.payload;
+    },
+    setNewStockInShopModalIsOpen(state , action){
+      state.newStockInShopModalIsOpen = action.payload;
     },
   },
 });
@@ -85,9 +93,11 @@ export const {
   setPayBillModalIsOpen,
   setAddExpensesModalIsOpen,
   setAddStorkInStore,
+  setAddStorkInShop,
   setAddCreditModalIsOpen,
   setPayCreditModalIsOpen,
-  setNewBillModalIsOpen
+  setNewBillModalIsOpen,
+  setNewStockInShopModalIsOpen
 } = userSlice.actions;
 
 export function setSideBarOpened() {

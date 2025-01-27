@@ -89,7 +89,7 @@ const AvailableStock = () => {
                   <td className="px-6 py-4">{item.count}</td>
                   <td className="px-6 py-4">{item.totalAmount}</td>
                   <td className="px-6 py-4 ">
-                    <img src={view} alt="edit" className="w-8 h-8 cursor-pointer" onClick={() => navigate('/data/category', { state: item.category })} />                  </td>
+                    <img src={view} alt="edit" className="w-8 h-8 cursor-pointer" onClick={() => navigate('/store/category', { state: item.category })} />                  </td>
                 </tr>
               ))
             ) : (

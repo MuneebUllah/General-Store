@@ -7,10 +7,11 @@ const cron = require('node-cron');
 const HistoryLog = require('./backend/model/store');
 const storeRouter = require('./backend/routes/store');
 const billRoutes = require('./backend/routes/bill');
-const route = require('./backend/routes/expenses');
+const expenseRoute = require('./backend/routes/expenses');
 const userRoutes = require('./backend/routes/user');
 const creditRoutes = require('./backend/routes/credit');
 const ShopBillingRoutes = require('./backend/routes/shop-billing');
+const shopRouter = require('./backend/routes/shop')
 
 app.use(cors());
 
@@ -39,10 +40,11 @@ cron.schedule('0 0 * * *', async () => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
     
-    app.use('/api', storeRouter)
-    app.use('/api' , billRoutes)
-    app.use('/api' , route)
+    app.use('/api/store', storeRouter)
+    app.use('/api/companies-bill' , billRoutes)
+    app.use('/api/expense' , expenseRoute)
     app.use('/' , userRoutes)
-    app.use('/api' , creditRoutes)
-    app.use('/api' , ShopBillingRoutes)
+    app.use('/api/credit' , creditRoutes)
+    app.use('/api/shop' , ShopBillingRoutes)
+    app.use('/api/shop' , shopRouter)
 app.listen(PORT, () => console.log('MongoDB Connected'))

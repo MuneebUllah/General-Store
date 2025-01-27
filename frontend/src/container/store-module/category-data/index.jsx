@@ -85,7 +85,7 @@ const CategoryData = () => {
                       src={view}
                       alt="view"
                       className="w-8 h-8 cursor-pointer"
-                      onClick={() => navigate('/data/name', { state: item?.name })}
+                      onClick={() => navigate('/store/name', { state: item?.name })}
                     />
                   </td>
                 </tr>

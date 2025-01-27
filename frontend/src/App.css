@@ -116,3 +116,38 @@
       page-break-before: always;
   }
 }
+
+    /* .p-custom-scrollbar-8{
+            &::-webkit-scrollbar {
+                width: 8px;
+              }
+              &::-webkit-scrollbar-thumb {
+                background-color: var(--primary);
+                border-radius: 200px;
+              }
+        } */
+
+        .custom-scrollbar {
+          overflow-y: scroll;
+          /* height: 400px; Adjust height as needed */
+        }
+    
+        .custom-scrollbar::-webkit-scrollbar {
+        border-radius: 50%;
+        height: 8px;
+            width: 8px; /* Adjust width as needed */
+        }
+    
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f1f1f1; /* Track color */
+        }
+    
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #888; /* Thumb color */
+          border-radius: 10px; /* Rounded corners */
+        }
+    
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: #555; /* Thumb color on hover */
+        }
+    

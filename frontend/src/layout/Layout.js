@@ -8,29 +8,42 @@ import { useLocation } from "react-router-dom";
 
 const Layout = ({ children }) => {
   const location = useLocation();
+
+  const isPathActive = (path, children) => {
+    if (path === "/") {
+      // Check for root paths
+      return location.pathname === "/" || location.pathname.includes("/dashboard");
+    }
+    // Check if the current path starts with the element's path or any of its children paths
+    return (
+      location.pathname.startsWith(path) ||
+      (children &&
+        children.some((child) => location.pathname.startsWith(child.path)))
+    );
+  };
+
   return (
     <div className="h-screen">
-      <div className="flex flex-row-reverse h-full  overflow-hidden">
+      <div className="flex flex-row-reverse h-full overflow-hidden">
         <div className="w-full h-full">
           <Navbar />
-          <main className="bg-[#F9F9F9] w-full  h-[calc(100%-80px)]  overflow-y-auto pb-4">
+          <main className="bg-[#F9F9F9] custom-scrollbar w-full h-[calc(100%-80px)] overflow-y-auto pb-4">
             {children}
           </main>
         </div>
         <Sidebar>
-          {sidebarData.map((element , index) => {
-            const isActive =
-              element.path === "/" // Check if the element's path is the root
-                ? location.pathname === "/" ||
-                  location.pathname.includes("/dashboard") // If it's the root, check if the current path is also root
-                : location.pathname.startsWith(element.path);
+          {sidebarData.map((element, index) => {
+            const isActive = isPathActive(element.path, element.children);
+
             return (
               <SidebarItem
+                key={index}
                 text={element.text}
                 icon={element.icon}
-                active={isActive}
                 link={element.path}
-                key={index}
+                alert={element.alert}
+                children={element.children}
+                active={isActive}
               />
             );
           })}

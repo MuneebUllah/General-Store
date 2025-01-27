@@ -27,7 +27,7 @@ export const sidebarData = [
   {
     text: "Dashboard",
     path: "/",
-    icon: <RxDashboard  size={20}/>,
+    icon: <RxDashboard size={20} />,
   },
   {
     text: "Today Calculation",
@@ -36,18 +36,21 @@ export const sidebarData = [
   },
   {
     text: "Shop",
-    path: "/shop",
     icon: <AiOutlineWechat size={20} />,
+    children: [
+      { text: "Total Stock", path: "/shop/total-stock"  , icon: <AiOutlineWechat size={20} /> },
+      { text: "Today Sale", path: "/shop/today-sale" ,      icon: <RxDashboard size={20} /> },
+    ],
   },
   {
     text: "Store",
-    path: "/data",
     icon: <MdOutlineLocalGroceryStore size={20} />,
+    children: [
+      { text: "Total Stock", path: "/store/total-stock" , icon: <FaRegMoneyBillAlt size={20} /> },
+      { text: "Track Record", path: "/store/history", icon: <FaHistory size={20} /> },
+    ],
   },
   { text: "Expenses", path: "/expense", icon: <FaUsers size={20} /> },
-
-  { text: "Track Record", path: "/history", icon: <FaHistory size={20} /> },
-  { text: "Companies Bill", path: "/bill", icon: <FaRegMoneyBillAlt  size={20}/> },
+  { text: "Companies Bill", path: "/bill", icon: <FaRegMoneyBillAlt size={20} /> },
   { text: "Credit Account", path: "/credit", icon: <CiCreditCard1 size={20} /> },
-
 ];

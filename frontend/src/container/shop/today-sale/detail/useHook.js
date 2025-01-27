@@ -1,5 +1,5 @@
 import Swal from "sweetalert2";
-import { Apis } from "../../../lib/apis";
+import { Apis } from "../../../../lib/apis";
 
 const useBillDetail = () => {
     const getShopBillById = async (id , setData) => {
