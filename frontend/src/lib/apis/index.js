@@ -17,11 +17,13 @@ export const Apis = {
     searchByName: (name) => Request.get(`/store/searchName?name=${name}`),
     searchHistoryByName: (name) => Request.get(`/store/history/search?name=${name}`),
     searchByCategory: (category) => Request.get(`/store/searchCategory?category=${category}`),
+    getStoreSuggestions:(type , query) => Request.get(`store/suggestions?type=${type}&query=${query}`),
 
     //Billing Apis
     getBills:() => Request.get('/companies-bill/bill'),
     createBill:(body) => Request.post('/companies-bill/bill' , body),
     searchBill:(name) => Request.get(`/companies-bill/bill/search?name=${name}`),
+    getBillSuggestions:(query) => Request.get(`/companies-bill/suggestions?query=${query}`),
 
     updateBill:(body) => Request.patch('/companies-bill/today-calc' , body),
     getUpdatedBills:() => Request.get('/companies-bill/today-calc'),

@@ -10,11 +10,12 @@ import { setAddBillModalIsOpen } from '../../../../redux/slices/userSlice';
 
 const AddBillPopup = () => {
     const { addBillModalIsOpen } = useSelector((state) => state.user);
-    const { postBill } = useHook()
+    const { postBill , getBillSuggestions} = useHook();
     const [data, setData] = useState({
         name: '',
         totalAmount: 0,
     });
+    const [suggestions, setSuggestions] = useState([]); // For autocomplete suggestions
 
     const customStyles = {
         content: {
@@ -26,25 +27,41 @@ const AddBillPopup = () => {
             transform: 'translate(-50%, -50%)',
             fontSize: '2rem',
             width: '40rem',
-            borderRadius: '3rem'
+            borderRadius: '3rem',
         },
     };
 
     function closeModal() {
-        dispatch(setAddBillModalIsOpen(false))
+        dispatch(setAddBillModalIsOpen(false));
     }
 
     const handleChange = (field, value) => {
         setData((prev) => ({
             ...prev,
-            [field]: value
+            [field]: value,
         }));
-        
+
+        // Fetch suggestions if the field is 'name'
+        if (field === 'name') {
+            // fetchSuggestions(value);
+            getBillSuggestions(value , setSuggestions)
+        }
     };
 
-    const updateData = () => {
-        postBill(data)
-    }    
+
+    const selectSuggestion = (value) => {
+        setData((prev) => ({
+            ...prev,
+            name: value,
+        }));
+        setSuggestions([]); // Clear suggestions on selection
+    };
+
+
+    const updateData = (e) => {
+        e.preventDefault()
+        postBill(data);
+    };
 
     return (
         <Modal
@@ -56,37 +73,50 @@ const AddBillPopup = () => {
             <button className='relative float-right text-right w-12' onClick={closeModal}>
                 <img src={close} alt="img" />
             </button>
-            <div className='flex flex-col items-center justify-center w-full gap-8'>
+            <form onSubmit={updateData} className='flex flex-col items-center justify-center w-full gap-8'>
                 <div>
                     <h2 className='text-2xl font-semibold font-inter'>{'Add New Bill'}</h2>
                 </div>
                 <div className='flex flex-wrap flex-col w-full gap-6 mt-6 px-4'>
-                    <div className='w-full'>
-                        <Searchinput 
-                            placeholder='Name' 
-                            stateValue={data?.name} 
-                            onchange={(value) => handleChange('name', value)} 
+                    <div className='w-full relative'>
+                        <Searchinput
+                            placeholder='Name'
+                            stateValue={data?.name}
+                            onchange={(value) => handleChange('name', value)}
                         />
+                        {suggestions.length > 0 && (
+                            <div
+                                className="absolute top-full left-0 w-full border border-gray-300 bg-white z-10 max-h-40 overflow-y-auto rounded-md shadow-md"
+                            >
+                                {suggestions.map((item, index) => (
+                                    <div
+                                        key={index}
+                                        onClick={() => selectSuggestion(item?.name)}
+                                        className="px-4 text-sm py-2 cursor-pointer hover:bg-gray-200"
+                                    >
+                                        {item?.name}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                     <div className='w-full'>
-                        <Searchinput 
-                            placeholder='Amount' 
-                            stateValue={data?.totalAmount} 
-                            onchange={(value) => handleChange('totalAmount', value)} 
+                        <Searchinput
+                            placeholder='Amount'
+                            stateValue={data?.totalAmount}
+                            onchange={(value) => handleChange('totalAmount', value)}
                         />
                     </div>
-                    
                 </div>
                 <div className='w-2/5'>
-                    <Button 
-                        title={'Add'} 
-                        backgroundColor='#1B473B' 
-                        className='text-base' 
-                        fill={true} 
-                        onclick={updateData}
+                    <Button
+                        title={'Add'}
+                        backgroundColor='#1B473B'
+                        className='text-base'
+                        fill={true}
                     />
                 </div>
-            </div>
+            </form>
         </Modal>
     );
 };

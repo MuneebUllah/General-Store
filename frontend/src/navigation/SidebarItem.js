@@ -7,35 +7,45 @@ export function SidebarItem({ text, icon, active, link, alert, children }) {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
+  const handleParentClick = (e) => {
+    if (children) {
+      // If children exist, prevent navigation and toggle submenu
+      e.preventDefault();
+      setIsOpen(!isOpen);
+    }
+  };
+
   return (
     <div>
-      <li
-        className={`relative flex items-center justify-center w-full p-3 h-18
+      {/* Parent Navigation */}
+      <Link to={!children ? link : "#"} onClick={handleParentClick}>
+        <li
+          className={`relative flex items-center justify-center w-full p-3 h-18
           text-[#808D9E] font-normal text-base cursor-pointer transition-colors group ${
             active
-              ? "bg-[#98a8b433] text-white border-white border-l-2"
-              : "hover:bg-[#98a8b433] hover:border-white hover:border-l-2 hover:text-white"
-          }`}
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <div className={`${isSidebarExpanded ? "ml-6" : ""}`}>{icon}</div>
-        <span
-          className={`overflow-hidden transition-all ${
-            isSidebarExpanded ? "w-52 ml-6" : "w-0"
+              ? "bg-[#6c9dc0e0] text-white border-white border-l-2"
+              : "hover:bg-[#6c9dc0e0] hover:border-white hover:border-l-2 hover:text-white"
           }`}
         >
-          {text}
-        </span>
-        {alert && (
-          <div
-            className={`absolute right-2 w-2 h-2 rounded bg-[#2E4D55] ${
-              isSidebarExpanded ? "" : "top-2"
+          <div className={`${isSidebarExpanded ? "ml-6" : ""}`}>{icon}</div>
+          <span
+            className={`overflow-hidden transition-all ${
+              isSidebarExpanded ? "w-52 ml-6" : "w-0"
             }`}
-          />
-        )}
-      </li>
+          >
+            {text}
+          </span>
+          {alert && (
+            <div
+              className={`absolute right-2 w-2 h-2 rounded bg-[#2E4D55] ${
+                isSidebarExpanded ? "" : "top-2"
+              }`}
+            />
+          )}
+        </li>
+      </Link>
 
-      {/* Render nested items */}
+      {/* Render Nested Items */}
       {children && isOpen && (
         <ul className="transition-all">
           {children.map((child, index) => {
@@ -60,5 +70,5 @@ export function SidebarItem({ text, icon, active, link, alert, children }) {
         </ul>
       )}
     </div>
-  )
+  );
 }

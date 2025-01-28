@@ -24,7 +24,19 @@ const useHook = () => {
       });
     })
 }
-    return { postBill }
+
+const getBillSuggestions = async (body , setSuggestions) => {
+  await Apis.getBillSuggestions(body)
+  .then((res) => setSuggestions(res?.data))
+  .catch((err) => {
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: err?.response?.data?.error,
+    });
+  })
+}
+    return { postBill , getBillSuggestions}
 }
 
 export default useHook; 

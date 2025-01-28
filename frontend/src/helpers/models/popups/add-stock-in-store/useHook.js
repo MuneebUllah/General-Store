@@ -27,41 +27,41 @@ const useHook = () => {
       })
   }
 
-  const getAllCategories = (setCategories) => {
-    Apis.getAllCategories()
-      .then((res) => setCategories(res.data.categories))
-      .catch((err) => {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: err?.response?.data?.error,
-        });
-      })
-  }
+  // const getAllCategories = (setCategories) => {
+  //   Apis.getAllCategories()
+  //     .then((res) => setCategories(res.data.categories))
+  //     .catch((err) => {
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Oops...",
+  //         text: err?.response?.data?.error,
+  //       });
+  //     })
+  // }
 
-  const getAllNames = (setName) => {
-    Apis.getAllNames()
-      .then((res) => setName(res.data.names))
-      .catch((err) => {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: err?.response?.data?.error,
-        });
-      })
-  }
+  // const getAllNames = (setName) => {
+  //   Apis.getAllNames()
+  //     .then((res) => setName(res.data.names))
+  //     .catch((err) => {
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Oops...",
+  //         text: err?.response?.data?.error,
+  //       });
+  //     })
+  // }
 
-  const getAllSizes = (setSize) => {
-    Apis.getAllSizes()
-      .then((res) => setSize(res.data.sizes))
-      .catch((err) => {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: err?.response?.data?.error,
-        });
-      })
-  }
+  // const getAllSizes = (setSize) => {
+  //   Apis.getAllSizes()
+  //     .then((res) => setSize(res.data.sizes))
+  //     .catch((err) => {
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Oops...",
+  //         text: err?.response?.data?.error,
+  //       });
+  //     })
+  // }
 
   const getAllPrices = (setPrice) => {
     Apis.getAllPrices()
@@ -75,8 +75,30 @@ const useHook = () => {
       })
   }
 
+      const getStoreSuggestions = (type , query , setSuggestions) => {   
+        console.log(query);
+        Apis.getStoreSuggestions(type , query)
+        .then((res) =>{
+          setSuggestions(res?.data) 
+        //   if(type === 'name')  {       
+        //   setSuggestions(res?.data?.names)
+        // } else if(type === 'category'){
+        //   setSuggestions(res?.data?.categories)
+        // }  else if(type === 'size'){
+        //   setSuggestions(res?.data?.sizes)
+        // }
+        })
+        .catch((err) => {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: err?.response?.data?.error,
+          });
+        })
+    }
+  
 
-  return { postData, getAllCategories, getAllNames, getAllPrices, getAllSizes }
+  return { postData, getAllPrices, getStoreSuggestions}
 }
 
 export default useHook; 

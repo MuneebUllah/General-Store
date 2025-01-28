@@ -4,39 +4,53 @@ const billRoutes = require('../routes/bill');
 const billPost = async (req, res) => {
     const { name, totalAmount, paidAmount } = req.body;
 
-    const parsedTotalAmount = parseFloat(totalAmount)
-    const parsedPaidAmount = parseFloat(paidAmount)
+    const parsedTotalAmount = parseFloat(totalAmount);
+    const parsedPaidAmount = parseFloat(paidAmount);
 
     if (!name || isNaN(parsedTotalAmount)) {
         return res.status(400).json({ error: 'Please fill the required fields' });
     }
 
     try {
-        // Find the bill with the same name
+        // Suggestions: Find similar names to assist users
+        const suggestions = await billModal.find(
+            { name: { $regex: new RegExp(name, 'i') } },
+            { name: 1, _id: 0 }
+        ).limit(5);
+
+        // Existing functionality for creating/updating bills
         const existingBill = await billModal.findOne({ name });
 
         if (existingBill) {
-            // Update the existing bill's totalAmount and paidAmount
-            existingBill.totalAmount += parsedTotalAmount; // Add the new totalAmount to the existing one
-            existingBill.paidAmount += parsedPaidAmount || 0; // Add the new paidAmount to the existing one (default to 0 if undefined)
-            await existingBill.save(); // Save the updated bill
-            return res.json({ message: 'Bill updated successfully', bill: existingBill });
+            existingBill.totalAmount += parsedTotalAmount;
+            existingBill.paidAmount += parsedPaidAmount || 0;
+            await existingBill.save();
+
+            return res.json({ 
+                message: 'Bill updated successfully', 
+                bill: existingBill, 
+                suggestions 
+            });
         } else {
-            // Create a new bill if it doesn't exist
             const newBill = new billModal({
                 name,
-                totalAmount:parsedTotalAmount,
-                paidAmount: parsedPaidAmount || 0
+                totalAmount: parsedTotalAmount,
+                paidAmount: parsedPaidAmount || 0,
             });
             await newBill.save();
-            return res.json({ message: 'Bill added successfully', bill: newBill });
-        }
 
+            return res.json({ 
+                message: 'Bill added successfully', 
+                bill: newBill, 
+                suggestions 
+            });
+        }
     } catch (error) {
         console.error('Error processing bill:', error);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 
 const getBills = async (req, res) => {
@@ -372,6 +386,28 @@ const getSavingAmount = async (req, res) => {
     }
 };
 
+const getBillSuggestions = async (req, res) => {
+    try {
+        const { query } = req.query; // 'query' parameter for suggestions
+
+        // Find distinct names matching the query
+        const suggestions = await billModal.find(
+            { name: { $regex: new RegExp(query, 'i') } }, // Case-insensitive search
+            { name: 1, _id: 0 } // Return only names
+        ).limit(10); // Limit the results to 10 suggestions
+
+        if (suggestions.length === 0) {
+            return res.json({ message: 'No suggestions found' });
+        }
+
+        return res.json(suggestions);
+    } catch (error) {
+        console.error('Error fetching suggestions:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+
 
 
 
@@ -385,5 +421,6 @@ module.exports = {
     getTotalSale,
     searchBillByName,
     searchTodayCalcByName,
-    getSavingAmount
+    getSavingAmount,
+    getBillSuggestions
 } 

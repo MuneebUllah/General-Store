@@ -10,7 +10,9 @@ import { setPayBillModalIsOpen } from '../../../../redux/slices/userSlice';
 
 const PayBillPopup = () => {
     const { payBillModalIsOpen } = useSelector((state) => state.user);
-    const { updateBill } = useHook();
+    const { updateBill  , getBillSuggestions } = useHook();
+        const [suggestions, setSuggestions] = useState([]); // For autocomplete suggestions
+    
     const [data, setData] = useState({
         name: '',
         amount: 0,
@@ -38,8 +40,23 @@ const PayBillPopup = () => {
     const handleChange = (field, value) => {
         setData((prev) => ({
             ...prev,
-            [field]: value
+            [field]: value,
         }));
+
+        // Fetch suggestions if the field is 'name'
+        if (field === 'name') {
+            // fetchSuggestions(value);
+            getBillSuggestions(value , setSuggestions)
+        }
+    };
+
+
+    const selectSuggestion = (value) => {
+        setData((prev) => ({
+            ...prev,
+            name: value,
+        }));
+        setSuggestions([]); // Clear suggestions on selection
     };
 
     const updateData = () => {
@@ -61,12 +78,27 @@ const PayBillPopup = () => {
                     <h2 className='text-2xl font-semibold font-inter'>{'Pay Bill'}</h2>
                 </div>
                 <div className='flex flex-wrap flex-col w-full gap-6 mt-6 px-4'>
-                    <div className='w-full'>
+                    <div className='w-full relative'>
                         <Searchinput
                             placeholder='Name'
                             stateValue={data.name}
                             onchange={(value) => handleChange('name', value)}
                         />
+                         {suggestions.length > 0 && (
+                            <div
+                                className="absolute top-full left-0 w-full border border-gray-300 bg-white z-10 max-h-40 overflow-y-auto rounded-md shadow-md"
+                            >
+                                {suggestions.map((item, index) => (
+                                    <div
+                                        key={index}
+                                        onClick={() => selectSuggestion(item?.name)}
+                                        className="px-4 text-sm py-2 cursor-pointer hover:bg-gray-200"
+                                    >
+                                        {item?.name}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                     <div className='w-full'>
                         <Searchinput

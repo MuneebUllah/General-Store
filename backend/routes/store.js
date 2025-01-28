@@ -17,7 +17,8 @@ const {
     getHistoryLogs,
     searchByCategory,
     searchByName,
-    searchHistoryByName
+    searchHistoryByName,
+    getStoreSuggestions
 } = require('../controller/store')
 
 storeRouter.route('/store')
@@ -42,6 +43,7 @@ storeRouter.get('/category/:category', getDataByCategory);
 storeRouter.get('/name/:name', getDataByName);
 storeRouter.get('/searchCategory' , searchByCategory)
 storeRouter.get('/searchName' , searchByName)
+storeRouter.get('/suggestions', getStoreSuggestions);
 
 
 
