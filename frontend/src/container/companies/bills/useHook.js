@@ -1,11 +1,11 @@
 import Swal from "sweetalert2";
 
-const { Apis } = require("../../lib/apis")
+const { Apis } = require("../../../lib/apis")
 
 const useBill = () => {
-    const getBills =async (setData) => {
-        await Apis.getBills()
-        .then((res) => setData(res?.data))
+    const getBills = async (id ,setData) => {
+        await Apis.getBills(id)
+        .then((res) => setData(res?.data?.bills))
         .catch((err) => {
             Swal.fire({
                 icon: "error",

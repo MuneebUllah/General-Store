@@ -51,6 +51,6 @@ export const sidebarData = [
     ],
   },
   { text: "Expenses", path: "/expense", icon: <FaUsers size={20} /> },
-  { text: "Companies Bill", path: "/bill", icon: <FaRegMoneyBillAlt size={20} /> },
+  { text: "Companies Bill", path: "/companies", icon: <FaRegMoneyBillAlt size={20} /> },
   { text: "Credit Account", path: "/credit", icon: <CiCreditCard1 size={20} /> },
 ];

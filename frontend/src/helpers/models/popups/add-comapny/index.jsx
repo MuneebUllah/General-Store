@@ -8,12 +8,11 @@ import { useSelector } from 'react-redux';
 import { dispatch } from '../../../../redux/store/store';
 import { setAddBillModalIsOpen } from '../../../../redux/slices/userSlice';
 
-const AddBillPopup = () => {
+const AddCompanyPopup = () => {
     const { addBillModalIsOpen } = useSelector((state) => state.user);
-    const { postBill , getBillSuggestions} = useHook();
+    const { createNewCompany , getBillSuggestions} = useHook();
     const [data, setData] = useState({
         name: '',
-        totalAmount: 0,
     });
     const [suggestions, setSuggestions] = useState([]); // For autocomplete suggestions
 
@@ -60,7 +59,7 @@ const AddBillPopup = () => {
 
     const updateData = (e) => {
         e.preventDefault()
-        postBill(data);
+        createNewCompany(data);
     };
 
     return (
@@ -100,13 +99,6 @@ const AddBillPopup = () => {
                             </div>
                         )}
                     </div>
-                    <div className='w-full'>
-                        <Searchinput
-                            placeholder='Amount'
-                            stateValue={data?.totalAmount}
-                            onchange={(value) => handleChange('totalAmount', value)}
-                        />
-                    </div>
                 </div>
                 <div className='w-2/5'>
                     <Button
@@ -121,4 +113,4 @@ const AddBillPopup = () => {
     );
 };
 
-export default AddBillPopup;
+export default AddCompanyPopup;

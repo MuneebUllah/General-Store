@@ -4,8 +4,8 @@ import { dispatch } from "../../../../redux/store/store"
 import { setAddBillModalIsOpen, setRetailerModalIsOpen } from "../../../../redux/slices/userSlice"
 
 const useHook = () => {
-  const postBill = async (body) => {
-    await Apis.createBill(body)
+  const createNewCompany = async (body) => {
+    await Apis.createNewCompany(body)
     .then((res) => {
       dispatch(setAddBillModalIsOpen(false))
       Swal.fire({
@@ -36,7 +36,7 @@ const getBillSuggestions = async (body , setSuggestions) => {
     });
   })
 }
-    return { postBill , getBillSuggestions}
+    return { createNewCompany , getBillSuggestions}
 }
 
 export default useHook; 

@@ -55,8 +55,8 @@ export function SidebarItem({ text, icon, active, link, alert, children }) {
                 <li
                   className={`flex items-center pl-8 p-2 text-[#808D9E] transition-colors ${
                     isChildActive
-                      ? "bg-[#98a8b433] text-white border-white border-l-2"
-                      : "hover:bg-[#98a8b433] hover:border-white hover:border-l-2 hover:text-white"
+                      ? "bg-[#6c9dc0e0] text-white border-white border-l-2"
+                      : "hover:bg-[#6c9dc0e0] hover:border-white hover:border-l-2 hover:text-white"
                   }`}
                 >
                   <div className={`ml-2 ${isSidebarExpanded ? "ml-8" : "w-0"}`}>{child.icon}</div>

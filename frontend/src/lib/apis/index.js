@@ -20,10 +20,15 @@ export const Apis = {
     getStoreSuggestions:(type , query) => Request.get(`store/suggestions?type=${type}&query=${query}`),
 
     //Billing Apis
-    getBills:() => Request.get('/companies-bill/bill'),
-    createBill:(body) => Request.post('/companies-bill/bill' , body),
+    createNewCompany:(body) => Request.post('/companies-bill/bill/companies' , body),
+    getCompaniesName:() => Request.get('/companies-bill/bill/companies'),
+    createNewBill:(id , body) => Request.post(`/companies-bill/bill/companies/${id}/bills` , body),
+    getBills:(id) => Request.get(`/companies-bill/bill/companies/${id}/bills`),
+    createPayment:(body , billId , companyId) =>Request.post(`/companies-bill/bill/companies/${companyId}/bills/${billId}/payments` , body),
+    getPaymentDetail:(billId , companyId) => Request.get(`/companies-bill/bill/companies/${companyId}/bills/${billId}/payments`),
     searchBill:(name) => Request.get(`/companies-bill/bill/search?name=${name}`),
     getBillSuggestions:(query) => Request.get(`/companies-bill/suggestions?query=${query}`),
+
 
     updateBill:(body) => Request.patch('/companies-bill/today-calc' , body),
     getUpdatedBills:() => Request.get('/companies-bill/today-calc'),
