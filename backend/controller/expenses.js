@@ -53,9 +53,13 @@ const searchExpenseByDate = async (req, res) => {
         const { date }  = req.query; // Get the name and date query parameters
 
         // Determine the start and end dates for the query
-        const startOfDay = date ? new Date(new Date(date).setHours(0, 0, 0, 0)) : new Date(new Date().setHours(0, 0, 0, 0));
-        const endOfDay = date ? new Date(new Date(date).setHours(23, 59, 59, 999)) : new Date(new Date().setHours(23, 59, 59, 999));
-
+        const startOfDay = date
+        ? new Date(new Date(date).setHours(0, 0, 0, 0))
+        : new Date(new Date().setHours(0, 0, 0, 0));
+      const endOfDay = date
+        ? new Date(new Date(date).setHours(23, 59, 59, 999))
+        : new Date(new Date().setHours(23, 59, 59, 999));
+  
         // Build the match criteria dynamically
         let matchCriteria = {
             createdAt: {

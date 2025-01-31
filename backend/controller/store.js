@@ -42,76 +42,6 @@ const getAllCategories = async (req, res) => {
   }
 };
 
-const getAllNames = async (req, res) => {
-  try {
-    // Fetch all distinct name values from the collection
-    const names = await modal.aggregate([
-      {
-        $group: {
-          _id: "$name",
-          count: { $sum: 1 },
-          totalAmount: { $sum: "$totalAmount" },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          name: "$_id",
-          count: 1,
-          totalAmount: 1,
-        },
-      },
-    ]);
-
-    // If no names are found
-    if (!names || names.length === 0) {
-      return res.status(404).json({ error: "No names found" });
-    }
-
-    // Return the array of names
-    return res.json({ names });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
-const getAllPrices = async (req, res) => {
-  try {
-    // Fetch all distinct price values from the collection
-    const prices = await modal.distinct("price");
-
-    // If no prices are found
-    if (!prices || prices.length === 0) {
-      return res.status(404).json({ error: "No prices found" });
-    }
-
-    // Return the array of prices
-    return res.json({ prices });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
-const getAllSizes = async (req, res) => {
-  try {
-    // Fetch all distinct size values from the collection
-    const sizes = await modal.distinct("size");
-
-    // If no sizes are found
-    if (!sizes || sizes.length === 0) {
-      return res.status(404).json({ error: "No sizes found" });
-    }
-
-    // Return the array of sizes
-    return res.json({ sizes });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
 const getDataById = async (req, res) => {
   try {
     const data = await modal.findById(req.params.id);
@@ -534,10 +464,7 @@ module.exports = {
   deleteDataById,
   getAllCategories,
   getDataByCategory,
-  getAllNames,
   getDataByName,
-  getAllPrices,
-  getAllSizes,
   getHistoryLogs,
   searchByCategory,
   searchByName,

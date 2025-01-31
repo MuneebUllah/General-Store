@@ -111,14 +111,6 @@ const PayBillPopup = () => {
                         <div className='flex items-center gap-2'>
                             <input 
                                 type="checkbox" 
-                                checked={data.type === 'bill'}
-                                onChange={(e) => handleChange('type', e.target.checked ? 'bill' : '')}
-                            />
-                            <p className='text-lg'>Bill Payment</p>
-                        </div>
-                        <div className='flex items-center gap-2'>
-                            <input 
-                                type="checkbox" 
                                 checked={data.type === 'saving'}
                                 onChange={(e) => handleChange('type', e.target.checked ? 'saving' : '')}
                             />
@@ -131,14 +123,6 @@ const PayBillPopup = () => {
                                 onChange={(e) => handleChange('type', e.target.checked ? 'others' : '')}
                             />
                             <p className='text-lg'>Others</p>
-                        </div>
-                        <div className='flex items-center gap-2'>
-                            <input 
-                                type="checkbox" 
-                                checked={data.type === 'bill from saving'}
-                                onChange={(e) => handleChange('type', e.target.checked ? 'bill from saving' : '')}
-                            />
-                            <p className='text-lg'>Bill From Saving</p>
                         </div>
                     </div>
                 </div>

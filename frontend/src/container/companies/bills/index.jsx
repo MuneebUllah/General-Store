@@ -30,7 +30,7 @@ const Bill = () => {
   useEffect(() => {
     getBills(id , setData);
   }, [addBillModalIsOpen]);
-
+  
   return (
     <div className="container mx-auto px-6 py-8">
       <div className="flex justify-between items-center mb-6">

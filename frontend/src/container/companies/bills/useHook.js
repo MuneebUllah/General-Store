@@ -16,7 +16,7 @@ const useBill = () => {
     }
 
     const searchBill =async (name , setData) => {
-        await Apis.searchBill(name)
+        await Apis.searchBill('bill' ,name)
         .then((res) => setData(res?.data))
         .catch((err) => {
             Swal.fire({

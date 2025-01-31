@@ -10,9 +10,6 @@ const {
     deleteDataById,
     getAllCategories,
     getDataByCategory,
-    getAllNames,
-    getAllSizes,
-    getAllPrices,
     getDataByName,
     getHistoryLogs,
     searchByCategory,
@@ -26,9 +23,6 @@ storeRouter.route('/store')
 .post(createData)
 
 storeRouter.get('/categories', getAllCategories);
-storeRouter.get('/name', getAllNames);
-storeRouter.get('/price', getAllPrices);
-storeRouter.get('/size', getAllSizes);
 storeRouter.get('/history', getHistoryLogs);
 storeRouter.get('/history/search' , searchHistoryByName)
 

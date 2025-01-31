@@ -7,6 +7,7 @@ const usePayAmount = () => {
   const payAmount = async (body, billId , companyId) => {
     await Apis.createPayment(body, billId , companyId)
       .then((res) => {
+        console.log(res)        
         dispatch(setPayCompaniesBillModalIsOpen(false))
         Swal.fire({
           position: "top-end",

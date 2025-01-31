@@ -13,20 +13,24 @@ const TodayTotalCalc = () => {
     const [data , setData] = useState([])
     const [searchQuery , setSearchQuery] = useState({
       name:'',
-      date:''
+      date:new Date()
     })
-    const { getUpdatedBills , searchTodayCalc , totalSaving} = useTodayTotalCalc()
+    const { searchTodayCalc , totalSaving} = useTodayTotalCalc()
     const { payBillModalIsOpen } = useSelector((state) => state.user);
-    useEffect(() =>{ getUpdatedBills(setData) , totalSaving()} , [ payBillModalIsOpen ])
+    useEffect(() =>{ searchTodayCalc(searchQuery , setData) , totalSaving()} , [ payBillModalIsOpen ])
 
     const search = (type) => {
       if(type){
         searchTodayCalc(searchQuery , setData)
       }
       else{
-        getUpdatedBills(setData) 
-      }
+        setSearchQuery(prevState => {
+          const updatedQuery = { ...prevState, date: new Date() };
+          searchTodayCalc(updatedQuery, setData);
+          return updatedQuery;
+        });
     }
+  }
 
     const date = moment(new Date()).format('DD/MM/YYYY')
 

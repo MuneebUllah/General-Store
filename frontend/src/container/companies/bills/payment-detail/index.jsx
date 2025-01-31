@@ -19,7 +19,6 @@ const PaymentDetail = () => {
   useEffect(() => {
     getPaymentDetail(id.billId, id?.companyId, setData);
   }, [id, payCompaniesBillModalIsOpen]);
-  console.log(data , id);
 
   return (
     <div className="container mx-auto px-6 py-8">

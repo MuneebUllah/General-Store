@@ -119,6 +119,7 @@ const searchAccountByName = async (req, res) => {
             {
                 $project: {
                     name: 1,
+                    phone:1,
                     totalAmount: { $toDouble: "$totalAmount" }, // Convert to float
                     paidAmount: { $toDouble: "$paidAmount" }, // Convert to float
                     remainingAmount: { $subtract: ["$totalAmount", "$paidAmount"] }, // Calculate remaining amount

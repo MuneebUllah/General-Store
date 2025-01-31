@@ -1,9 +1,7 @@
 const express = require("express");
 const {
   updateBillAmount,
-  getTotalSale,
   searchTodayCalcByName,
-  searchBillByName,
   getSavingAmount,
   getBillSuggestions,
   createNewCompany,
@@ -12,6 +10,7 @@ const {
   getCompaniesName,
   getBills,
   getPaymentDetail,
+  searchByName
 } = require("../controller/bill");
 
 const authenticateToken = require("../middlewares/auth");
@@ -30,8 +29,8 @@ billRoutes
   .post(payment)
   .get(getPaymentDetail);
 
-billRoutes.get("/bill/search", searchBillByName);
-billRoutes.route("/today-calc").patch(updateBillAmount).get(getTotalSale);
+billRoutes.get("/bill/search", searchByName);
+billRoutes.route("/today-calc").patch(updateBillAmount);
 
 billRoutes.get("/today-calc/search", searchTodayCalcByName);
 billRoutes.get("/saving", getSavingAmount);

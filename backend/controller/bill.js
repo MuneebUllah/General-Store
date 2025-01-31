@@ -1,55 +1,4 @@
 const { billModal, savingModal, cashModal } = require("../model/bill");
-const billRoutes = require("../routes/bill");
-
-// const billPost = async (req, res) => {
-//     const { name, totalAmount, paidAmount } = req.body;
-
-//     const parsedTotalAmount = parseFloat(totalAmount);
-//     const parsedPaidAmount = parseFloat(paidAmount);
-
-//     if (!name || isNaN(parsedTotalAmount)) {
-//         return res.status(400).json({ error: 'Please fill the required fields' });
-//     }
-
-//     try {
-//         // Suggestions: Find similar names to assist users
-//         const suggestions = await billModal.find(
-//             { name: { $regex: new RegExp(name, 'i') } },
-//             { name: 1, _id: 0 }
-//         ).limit(5);
-
-//         // Existing functionality for creating/updating bills
-//         const existingBill = await billModal.findOne({ name });
-
-//         if (existingBill) {
-//             existingBill.totalAmount += parsedTotalAmount;
-//             existingBill.paidAmount += parsedPaidAmount || 0;
-//             await existingBill.save();
-
-//             return res.json({
-//                 message: 'Bill updated successfully',
-//                 bill: existingBill,
-//                 suggestions
-//             });
-//         } else {
-//             const newBill = new billModal({
-//                 name,
-//                 totalAmount: parsedTotalAmount,
-//                 paidAmount: parsedPaidAmount || 0,
-//             });
-//             await newBill.save();
-
-//             return res.json({
-//                 message: 'Bill added successfully',
-//                 bill: newBill,
-//                 suggestions
-//             });
-//         }
-//     } catch (error) {
-//         console.error('Error processing bill:', error);
-//         return res.status(500).json({ error: 'Internal Server Error' });
-//     }
-// };
 
 const createNewCompany = async (req, res) => {
   try {
@@ -85,9 +34,9 @@ const createNewBill = async (req, res) => {
 
 const payment = async (req, res) => {
   try {
-    let { amount , description} = req.body;
+    let { amount, description, type } = req.body;
 
-    // Convert amount to number to avoid errors
+    // Convert amount to number
     amount = Number(amount);
     if (isNaN(amount)) {
       return res.status(400).json({ error: "Invalid amount value" });
@@ -99,20 +48,41 @@ const payment = async (req, res) => {
     const bill = company.bills.id(req.params.billId);
     if (!bill) return res.status(404).json({ error: "Bill not found" });
 
-    bill.paidAmount = Number(bill.paidAmount) + amount;
-
     // Prevent paidAmount from going negative
     if (bill.paidAmount < 0) {
       return res.status(400).json({ error: "Paid amount cannot be negative" });
     }
 
-    // Add payment record
-    const newPayment = { amount };
+    // Add payment record first
+    const newPayment = { amount, description };
     bill.payments.push(newPayment);
+    bill.paidAmount += amount; // Update paid amount
 
-    company.save();
+    // Handle different payment types
+    if (type === "bill") {
+      await addAmountToCash(bill.billName, amount, type);
+    } else if (type === "others") {
+    } else if (type === "bill from saving") {
+      let savingRecord = await savingModal.findOne().sort({ date: -1 });
+
+      if (!savingRecord || savingRecord.amount < amount) {
+        return res
+          .status(400)
+          .json({ error: "Insufficient savings to pay the bill" });
+      }
+
+      // Deduct from savings
+      savingRecord.amount -= amount;
+      await savingRecord.save(); // Save updated savings record
+    } else {
+      return res.status(400).json({ error: "Please Enter The Correct Data" });
+    }
+
+    await company.save(); // Save the updated company and bills
+
     res.status(201).json({
-    description,
+      message: "Payment added successfully",
+      description: newPayment.description,
       amount: newPayment.amount,
       remainingAmount: bill.totalAmount - bill.paidAmount,
     });
@@ -147,7 +117,11 @@ const getBills = async (req, res) => {
     const company = await billModal.findById(id).populate("bills");
     if (!company) return res.status(404).json({ message: "Company not found" });
 
-    const billData = company.bills.map((bill) => ({
+    if (!company.bills || company.bills.length === 0 ) {
+      return res.status(200).json({ bills: [] });
+    }
+
+    const billData = company?.bills?.map((bill) => ({
       _id: bill._id,
       billName: bill.billName,
       invoiceNumber: bill.invoiceNumber,
@@ -195,7 +169,7 @@ const getPaymentDetail = async (req, res) => {
     const company = await billModal.findById(companyId).populate({
       path: "bills",
       match: { _id: billId },
-      populate: { path: "payments" },
+      populate: { path: "payments", select: "amount date description" }, // Explicitly select description
     });
 
     if (!company) return res.status(404).json({ message: "Company not found" });
@@ -205,12 +179,12 @@ const getPaymentDetail = async (req, res) => {
 
     let remainingAmount = bill.totalAmount;
     const payments = bill.payments.map((payment) => {
-      remainingAmount -= payment.amount; // Addition or Deduction
+      remainingAmount -= payment.amount;
       return {
         date: new Date(payment.date).toLocaleDateString("en-GB"),
         amount: payment.amount,
-        remainingAmount: remainingAmount,
-        description:payment.description
+        remainingAmount,
+        description: payment.description , // Handle missing descriptions
       };
     });
 
@@ -238,7 +212,7 @@ const addAmountToCash = async (name, amount, type) => {
       // If a record already exists, update the totalCash field
       cashRecord.amount += parseFloat(amount);
       await cashRecord.save(); // Save the updated record
-      console.log("Cash updated successfully");
+      console.log("Cash updated successfully", cashRecord);
     } else {
       // If no record exists, create a new cash record
       cashRecord = new cashModal({
@@ -249,7 +223,7 @@ const addAmountToCash = async (name, amount, type) => {
         date: today,
       });
       await cashRecord.save(); // Save the new record
-      console.log("New cash record created");
+      console.log("New cash record created", cashRecord);
     }
   } catch (error) {
     console.error("Error updating cash:", error);
@@ -267,19 +241,7 @@ const updateBillAmount = async (req, res) => {
   }
 
   try {
-    if (type === "bill") {
-      // Handle Bill
-      const bill = await billModal.findOne({ name });
-      if (bill) {
-        bill.paidAmount += parseFloat(amount);
-        await bill.save();
-      } else {
-        res.status(404).json({ error: "No Specific Bill Found" });
-      }
-
-      await addAmountToCash(name, amount, type); // Add bill amount to cash
-      return res.json({ message: "Bill added successfully", bill });
-    } else if (type === "saving") {
+    if (type === "saving") {
       // Handle Saving
       let savingRecord = await savingModal.findOne().sort({ date: -1 });
 
@@ -304,30 +266,6 @@ const updateBillAmount = async (req, res) => {
       // If the type is not "bill" or "saving", adjust to cash directly
       await addAmountToCash(name, amount, type); // Automatically add to cash
       return res.json({ message: "Amount added to cash successfully." });
-    } else if (type === "bill from saving") {
-      const bill = await billModal.findOne({ name });
-
-      if (!bill) {
-        return res.status(404).json({ error: "No specific bill found" });
-      }
-
-      // Retrieve the latest saving record
-      let savingRecord = await savingModal.findOne().sort({ date: -1 });
-
-      if (!savingRecord || savingRecord.amount < parseFloat(amount)) {
-        return res
-          .status(400)
-          .json({ error: "Insufficient savings to pay the bill" });
-      }
-
-      // Deduct the amount from savings and update the bill's paid amount
-      savingRecord.amount -= parseFloat(amount);
-      bill.paidAmount += parseFloat(amount);
-
-      await savingRecord.save(); // Save the updated saving record
-      await bill.save(); // Save the updated bill
-
-      return res.json({ message: "Bill paid successfully from savings", bill });
     } else {
       return res.status(400).json({ error: "Please Enter The Correct Data" });
     }
@@ -388,103 +326,101 @@ const getTodayUpdatedBills = async (req, res) => {
   }
 };
 
-const getTotalSale = async (req, res) => {
-  try {
-    const startOfDay = new Date(
-      Date.UTC(
-        new Date().getUTCFullYear(),
-        new Date().getUTCMonth(),
-        new Date().getUTCDate(),
-        0,
-        0,
-        0,
-        0
-      )
-    );
-    const endOfDay = new Date(
-      Date.UTC(
-        new Date().getUTCFullYear(),
-        new Date().getUTCMonth(),
-        new Date().getUTCDate(),
-        23,
-        59,
-        59,
-        999
-      )
-    );
-
-    const startDateOnly = new Date(startOfDay);
-    const endDateOnly = new Date(endOfDay);
-
-    const startOfDayFormatted = startDateOnly.toISOString().split("T")[0];
-    const endOfDayFormatted = endDateOnly.toISOString().split("T")[0];
-
-    // Find all cash entries for today
-    const todayTotalCash = await cashModal.find({
-      date: {
-        $gte: startOfDayFormatted,
-        $lt: endOfDayFormatted,
-      },
-    });
-
-    // Sum all amounts in todayTotalCash
-    const totalCash = todayTotalCash.reduce(
-      (sum, cash) => sum + cash.amount,
-      0
-    );
-
-    // Return response with the sum of amounts
-    return res.json({
-      message: "Total sale for today",
-      todayTotalCash,
-      totalCash, // Sum of all amounts
-    });
-  } catch (error) {
-    console.error("Error calculating total sale:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
-const searchBillByName = async (req, res) => {
-  try {
-    const { name } = req.query; // Get the name query parameter
-
-    if (!name) {
-      return res
-        .status(400)
-        .json({ error: "Name query parameter is required" });
-    }
-
-    // Aggregate data for the specific name
-    const nameData = await billModal.aggregate([
-      {
-        $match: {
-          name: {
-            $regex: new RegExp(name, "i"), // Case-insensitive partial match
+const searchByName = async (req, res) => {
+    try {
+      const { companyName, billName } = req.query; // Get both query parameters
+  
+      // If neither companyName nor billName is provided
+      if (!companyName && !billName) {
+        return res.status(400).json({ error: "At least one query parameter (companyName or billName) is required" });
+      }
+  
+      // If companyName is provided, search by company name
+      if (companyName) {
+        const companyData = await billModal.aggregate([
+          {
+            $match: {
+              name: { $regex: new RegExp(companyName, "i") }, // Case-insensitive partial match
+            },
           },
-        },
-      },
-      {
-        $project: {
-          name: 1,
-          totalAmount: 1,
-          paidAmount: 1,
-          remainingAmount: { $subtract: ["$totalAmount", "$paidAmount"] }, // Calculate remaining amount
-          _id: 0, // Exclude _id field
-        },
-      },
-    ]);
-
-    if (nameData.length === 0) {
-      return res.json({ error: "No bills found with the given name" });
+          {
+            $project: {
+              name: 1,
+              bills: 1, // Keep the bills array for further calculation
+            },
+          },
+          {
+            $addFields: {
+              billCount: { $size: "$bills" }, // Calculate the number of bills
+              remainingAmount: {
+                $reduce: {
+                  input: "$bills",
+                  initialValue: 0,
+                  in: { $add: ["$$value", { $subtract: ["$$this.totalAmount", "$$this.paidAmount"] }] },
+                },
+              }, // Calculate the remaining amount by subtracting paidAmount from totalAmount
+            },
+          },
+          {
+            $project: {
+              name: 1,
+              billCount: 1,
+              remainingAmount: 1,
+              _id: 1, // Document ka _id
+              company: { _id: 1 }
+            },
+          },
+        ]);
+  
+        if (companyData.length > 0) {
+            
+          return res.json(companyData); // Send company data in the same format
+        }
+      }
+  
+      // If billName is provided, search by bill name
+      if (billName) {
+        const billData = await billModal.aggregate([
+          {
+            $unwind: "$bills", // Unwind the bills array to search within each bill
+          },
+          {
+            $match: {
+              "bills.billName": { $regex: new RegExp(billName, "i") }, // Case-insensitive partial match
+            },
+          },
+          {
+            $project: {
+              "bills.billName": 1,
+              'bills.invoiceNumber': 1,
+              "bills.totalAmount": 1,
+              "bills.paidAmount": 1,
+              "bills.remainingAmount": { $subtract: ["$bills.totalAmount", "$bills.paidAmount"] }, // Calculate remaining amount
+             'bills._id': 1,
+            },
+          },
+        ]);
+  
+        if (billData.length > 0) {
+            const formattedBillData = billData.map((entry) => ({
+                _id: entry.bills._id,
+                billName: entry.bills.billName,
+                invoiceNumber: entry.bills.invoiceNumber, // Assuming invoiceNumber is within the bill data
+                totalAmount: entry.bills.totalAmount,
+                paidAmount: entry.bills.paidAmount,
+                remainingAmount: entry.bills.remainingAmount,
+              }));
+      
+              return res.json(formattedBillData);; // Send the bill data with the desired structure
+        }
+      }
+  
+      return res.json({ error: "No matching company or bill found" });
+    } catch (error) {
+      console.error("Error searching by name:", error);
+      return res.status(500).json({ error: "Internal Server Error" });
     }
-
-    return res.json(nameData);
-  } catch (error) {
-    console.error("Error fetching bills by name:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-};
+  };
 
 const searchTodayCalcByName = async (req, res) => {
   try {
@@ -597,8 +533,7 @@ module.exports = {
   getPaymentDetail,
   updateBillAmount,
   getTodayUpdatedBills,
-  getTotalSale,
-  searchBillByName,
+  searchByName,
   searchTodayCalcByName,
   getSavingAmount,
   getBillSuggestions,

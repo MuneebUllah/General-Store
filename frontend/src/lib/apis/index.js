@@ -6,9 +6,6 @@ export const Apis = {
     getDataById : (id) => Request.get(`/store/store/${id}`),
     getDataByCategories:(categories) => Request.get(`/store/category/${categories}`),
     getAllCategories:() => Request.get(`/store/categories`),
-    getAllNames:() => Request.get(`/store/name`),
-    getAllPrices:() => Request.get(`/store/price`),
-    getAllSizes:() => Request.get(`/store/size`),
     postData: (body) => Request.post(`/store/store` , body),
     addDataById: (id , body) => Request.patch(`/store/add/${id}` , body),
     removeDataById: (id , body) => Request.patch(`/store/remove/${id}` , body),
@@ -26,12 +23,15 @@ export const Apis = {
     getBills:(id) => Request.get(`/companies-bill/bill/companies/${id}/bills`),
     createPayment:(body , billId , companyId) =>Request.post(`/companies-bill/bill/companies/${companyId}/bills/${billId}/payments` , body),
     getPaymentDetail:(billId , companyId) => Request.get(`/companies-bill/bill/companies/${companyId}/bills/${billId}/payments`),
-    searchBill:(name) => Request.get(`/companies-bill/bill/search?name=${name}`),
+    searchBill: (type, name) => {
+        console.log(name)        
+        const query = type === 'company' ? `companyName=${name}` : `billName=${name}`;
+        return Request.get(`/companies-bill/bill/search?${query}`);
+      },    
     getBillSuggestions:(query) => Request.get(`/companies-bill/suggestions?query=${query}`),
 
 
     updateBill:(body) => Request.patch('/companies-bill/today-calc' , body),
-    getUpdatedBills:() => Request.get('/companies-bill/today-calc'),
     searchTodayCalc:({name , date}) => Request.get(`/companies-bill/today-calc/search?name=${name}&date=${date}`),
 
     // Expenses

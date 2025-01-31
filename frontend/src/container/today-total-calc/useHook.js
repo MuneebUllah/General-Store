@@ -2,18 +2,6 @@ import Swal from "sweetalert2";
 import { Apis } from "../../lib/apis";
 
 const useTodayTotalCalc = () => {
-    const getUpdatedBills = async (setData) => {
-        await Apis.getUpdatedBills()
-            .then((res) => setData(res?.data))
-            .catch((err) => {
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: err?.response?.data?.error,
-                });
-            })
-
-    }
 
     const totalSaving = async () => {
         Apis.getTotalSaving()
@@ -38,7 +26,7 @@ const useTodayTotalCalc = () => {
                 });
             })
     }
-    return { getUpdatedBills, searchTodayCalc , totalSaving }
+    return { searchTodayCalc , totalSaving }
 }
 
 export default useTodayTotalCalc;

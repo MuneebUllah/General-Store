@@ -15,8 +15,8 @@ const useCompanies = () => {
         })
     }
 
-    const searchBill =async (name , setData) => {
-        await Apis.searchBill(name)
+    const searchBill =async ( name , setData) => {
+        await Apis.searchBill('company' , name)
         .then((res) => setData(res?.data))
         .catch((err) => {
             Swal.fire({
