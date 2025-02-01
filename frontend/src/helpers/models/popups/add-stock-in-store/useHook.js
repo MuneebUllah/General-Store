@@ -28,7 +28,6 @@ const useHook = () => {
   }
 
       const getStoreSuggestions = (type , query , setSuggestions) => {   
-        console.log(query);
         Apis.getStoreSuggestions(type , query)
         .then((res) =>{
           setSuggestions(res?.data) 

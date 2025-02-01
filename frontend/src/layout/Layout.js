@@ -5,9 +5,12 @@ import { sidebarData } from "../helpers/constants";
 import Navbar from "../navigation/Navbar";
 import { SidebarItem } from "../navigation/SidebarItem";
 import { useLocation } from "react-router-dom";
+import LineLoader from "../components/loader";
+import { useSelector } from "react-redux";
 
 const Layout = ({ children }) => {
   const location = useLocation();
+  const { isLoading } = useSelector(state => state.user)
 
   const isPathActive = (path, children) => {
     if (path === "/") {
@@ -20,7 +23,7 @@ const Layout = ({ children }) => {
       (children &&
         children.some((child) => location.pathname.startsWith(child.path)))
     );
-  };
+  };  
 
   return (
     <div className="h-screen">
@@ -28,6 +31,7 @@ const Layout = ({ children }) => {
         <div className="w-full h-full">
           <Navbar />
           <main className="bg-[#F9F9F9] custom-scrollbar w-full h-[calc(100%-80px)] overflow-y-auto pb-4">
+            {isLoading ? <LineLoader /> : ''}
             {children}
           </main>
         </div>

@@ -33,7 +33,8 @@ cron.schedule('0 0 * * *', async () => {
 });
 
 
-    dbConnection('mongodb+srv://muneebullah0099:Muneebjutt123@cluster0.fy81x.mongodb.net/')
+    dbConnection('mongodb://localhost:27017')
+    // dbConnection('mongodb+srv://muneebullah0099:Muneebjutt123@cluster0.fy81x.mongodb.net/')
     .then(()=> console.log('Mongodb Connected'))
     .catch((err)=> console.log(err))
 

@@ -94,17 +94,8 @@ const AddStockInStorePopup = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     postData(data);
-    setData({
-      name: "",
-      category: "",
-      size: "",
-      quantity: 0,
-      price: 0,
-      noOfItems: 0,
-      weight: "",
-    });
   };  
-
+  
   return (
     <Modal
       isOpen={addStockInStoreModalIsOpen}
@@ -141,7 +132,7 @@ const AddStockInStorePopup = () => {
                       onClick={() => selectSuggestion(item)}
                       className="px-4 text-sm py-2 cursor-pointer hover:bg-gray-200"
                     >
-                      {item?.name}
+                      {item}
                     </div>
                   ))}
                 </div>
@@ -161,7 +152,7 @@ const AddStockInStorePopup = () => {
                       onClick={() => selectSuggestion(item)}
                       className="px-4 text-sm py-2 cursor-pointer hover:bg-gray-200"
                     >
-                      {item?.category}
+                      {item}
                     </div>
                   ))}
                 </div>
@@ -169,11 +160,13 @@ const AddStockInStorePopup = () => {
             </div>
           </div>
           <div className="flex justify-between w-full gap-4">
-            <Searchinput
+            <input
               type="number"
               placeholder="Quantity (Cottons)"
+              step="0.01"
               value={data?.quantity}
-              onchange={(value) => handleInputChange("quantity", value)}
+              onChange={(e) => handleInputChange("quantity", e.target.value)}
+              className="p-4 w-full h-14 bg-gray-100 border-[1px] border-solid border-[#E2E8F0] rounded-lg outline-none text-base text-gray-600"
             />
             <Searchinput
               type="number"
@@ -203,7 +196,7 @@ const AddStockInStorePopup = () => {
                       onClick={() => selectSuggestion(item)}
                       className="px-4 text-sm py-2 cursor-pointer hover:bg-gray-200"
                     >
-                      {item?.size}
+                      {item}
                     </div>
                   ))}
                 </div>

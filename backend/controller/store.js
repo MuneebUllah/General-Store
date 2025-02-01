@@ -420,40 +420,29 @@ const searchByName = async (req, res) => {
 };
 
 const getStoreSuggestions = async (req, res) => {
-  const { type  , query }= req.query;
-  console.log(query , type);
-
-// return res.json(suggestions);
+    const { type, query } = req.query;
+    console.log(query, type);
   
-  try {
-    // Fetch distinct values for name, category, price, and size
-    if (type === "name") {
-      const names = await modal.find(
-        { name: { $regex: new RegExp(query, 'i') } }, // Case-insensitive search
-        { name: 1, _id: 0 } // Return only names
-    ).limit(10);
-      return res.json(names);
-    } else if (type === "category") {
-      const categories =await modal.find(
-        { category: { $regex: new RegExp(query, 'i') } }, // Case-insensitive search
-        { category: 1, _id: 0 } // Return only names
-    ).limit(10);
-      return res.json(categories);
-    } else if (type === "size") {
-      const sizes = await modal.find(
-        { size: { $regex: new RegExp(query, 'i') } }, // Case-insensitive search
-        { size: 1, _id: 0 } // Return only names
-    ).limit(10);
-      return res.json(sizes);
-    } else {
-      res.json({ message: "Please Enter The Correct Type" });
+    try {
+      let suggestions = [];
+  
+      if (type === "name") {
+        suggestions = await modal.distinct("name", { name: { $regex: new RegExp(query, "i") } });
+      } else if (type === "category") {
+        suggestions = await modal.distinct("category", { category: { $regex: new RegExp(query, "i") } });
+      } else if (type === "size") {
+        suggestions = await modal.distinct("size", { size: { $regex: new RegExp(query, "i") } });
+      } else {
+        return res.json({ message: "Please Enter The Correct Type" });
+      }
+  
+      return res.json(suggestions.slice(0, 10)); // Top 10 suggestions
+    } catch (error) {
+      console.error("Error fetching suggestions:", error);
+      return res.status(500).json({ error: "Internal Server Error" });
     }
-    // Return the suggestions
-  } catch (error) {
-    console.error("Error fetching suggestions:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-};
+  };
+  
 
 module.exports = {
   getAllData,

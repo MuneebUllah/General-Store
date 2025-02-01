@@ -1,5 +1,7 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { dispatch } from '../redux/store/store';
+import { startLoading, stopLoading } from '../redux/slices/userSlice';
 
 export const Base_URL = "http://localhost:8000/api";
 
@@ -11,6 +13,7 @@ const useHttp = () =>{
  function configureHeaders() {
         Request.interceptors.request.use(
           (config) => {
+            dispatch(startLoading())
             const accessToken = localStorage.getItem('token');
             if (accessToken) {
               config.headers.Authorization = `Bearer ${accessToken}`;
@@ -24,7 +27,9 @@ const useHttp = () =>{
       // Configure Interceptors
  const configureInterceptors = () => {
         Request.interceptors.response.use(
-          (response) => response,
+          (response) =>{
+            dispatch(stopLoading())
+            return response},
           async (error) => {
             const originalRequest = error.config;
             if (error.response && error.response.status === 401 && !originalRequest._retry) {
